@@ -1,3 +1,8 @@
+# About the project
+
+[Click here](https://next-pokedex-swart.vercel.app/) to see the project deployed on Vercel.
+Made with Next.js, React.js, Tailwind CSS and [PokeAPI](https://pokeapi.co/).
+
 # Next.js + Tailwind CSS Example
 
 This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.2)](https://tailwindcss.com/blog/tailwindcss-v3-2) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
