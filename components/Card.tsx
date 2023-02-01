@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { memo, useEffect, useState } from "react";
+import LoadingCard from "./LoadingCard";
 import TypePill from "./TypePill";
 
 const Card = memo(({ url }: { url: string }) => {
@@ -24,7 +25,7 @@ const Card = memo(({ url }: { url: string }) => {
 
   return (
     <>
-      {pokemon && (
+      {pokemon ? (
         <Link
           href={`/pokemon/${pokemon.id}`}
           className="w-60 m-2 flex flex-col justify-center hover:scale-105 hover:shadow-xl
@@ -40,7 +41,7 @@ const Card = memo(({ url }: { url: string }) => {
           <div className="bg-gray-700 rounded-2xl shadow-md p-4 pt-32 -mt-28">
             <h3 className="font-semibold capitalize text-2xl">
               {pokemon.name}
-              <span className="font-medium text-gray-200">#{pokemon.id}</span>
+              <span className="font-medium text-gray-200"> #{pokemon.id}</span>
             </h3>
             <div className="flex justify-center space-x-2 mt-2">
               {pokemon.types.map((type) => (
@@ -49,7 +50,7 @@ const Card = memo(({ url }: { url: string }) => {
             </div>
           </div>
         </Link>
-      )}
+      ) : <LoadingCard/>}
     </>
   );
 });

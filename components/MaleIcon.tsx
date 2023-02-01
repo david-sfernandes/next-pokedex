@@ -1,10 +1,10 @@
-const MaleIcon = () => (
+const MaleIcon = ({className}: {className?: string}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"
     height="16"
     fill="currentColor"
-    className="bi bi-gender-male h-7 w-7"
+    className={`bi bi-gender-male h-7 w-7 ${className}`}
     viewBox="0 0 16 16"
   >
     <path
