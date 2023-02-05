@@ -4,7 +4,7 @@ import { memo, useEffect, useState } from "react";
 import LoadingCard from "./LoadingCard";
 import TypePill from "./TypePill";
 
-const Card = memo(({ url }: { url: string }) => {
+export const Card = ({ url }: { url: string }) => {
   const [pokemon, setPokemon] = useState<PokemonCard | null>();
 
   useEffect(() => {
@@ -14,12 +14,13 @@ const Card = memo(({ url }: { url: string }) => {
         setPokemon({
           id,
           name,
-          sprite: sprites.other.home.front_default,
+          sprite:
+            sprites.other.home.front_default ||
+            sprites.other["official-artwork"].front_default,
           types,
         })
       );
-    // .then(({id, name, sprites, types}) => console.log({id, name, sprites, types}));
-  }, []);
+  }, [url]);
 
   console.log(`render ${url}`);
 
@@ -28,8 +29,7 @@ const Card = memo(({ url }: { url: string }) => {
       {pokemon ? (
         <Link
           href={`/pokemon/${pokemon.id}`}
-          className="w-60 m-2 flex flex-col justify-center hover:scale-105 hover:shadow-xl
-          transform transition-all duration-200 ease-out text-center"
+          className="card"
         >
           <Image
             src={pokemon.sprite}
@@ -41,18 +41,22 @@ const Card = memo(({ url }: { url: string }) => {
           <div className="bg-gray-700 rounded-2xl shadow-md p-4 pt-32 -mt-28">
             <h3 className="font-semibold capitalize text-2xl">
               {pokemon.name}
-              <span className="font-medium text-gray-200"> #{pokemon.id}</span>
+              <span className="font-normal text-gray-200"> #{pokemon.id}</span>
             </h3>
             <div className="flex justify-center space-x-2 mt-2">
               {pokemon.types.map((type) => (
-                <TypePill type={type.type.name} />
+                <TypePill key={type.type.name} type={type.type.name} />
               ))}
             </div>
           </div>
         </Link>
-      ) : <LoadingCard/>}
+      ) : (
+        <LoadingCard />
+      )}
     </>
   );
-});
+};
 
-export default Card;
+export const MemoCard = memo(({ url }: { url: string }) => {
+  return <Card url={url} />;
+});

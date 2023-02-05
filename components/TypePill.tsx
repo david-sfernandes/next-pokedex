@@ -25,7 +25,8 @@ export default function TypePill({
     dark: "bg-dark",
     steel: "bg-steel",
     fairy: "bg-fairy",
-  }
+  };
+
   return (
     <p
       className={`px-4 py-1 font-medium rounded-full ${
