@@ -93,7 +93,7 @@ export default function PokemonPage() {
       }
     >
       <main
-        className={`pokemonPage ${
+        className={`pokemonPage w-full ${
           pokemon
             ? fromMap[pokemon.types[0].type.name as FromMapKey]
             : "from-gray-800 to-gray-800"

@@ -65,6 +65,9 @@ const Home: NextPage = () => {
           Load more
         </button>
       </main>
+      <footer className="flex items-center justify-center p-3 w-full text-sm">
+        <p>Make with <a href="https://pokeapi.co/" className="font-medium hover:underline">PokéAPI</a></p>
+      </footer>
     </Layout>
 
   );
