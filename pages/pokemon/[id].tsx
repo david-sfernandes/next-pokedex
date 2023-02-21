@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Measure from "../../components/Measure";
 import TypePill from "../../components/TypePill";
 import {
@@ -15,11 +14,15 @@ import { Card } from "../../components/Card";
 import GenderSwitcher from "../../components/GenderSwitcher";
 import Layout from "../../components/Layout";
 
-export default function PokemonPage() {
-  const { id } = useRouter().query;
-  const [pokemon, setPokemon] = useState<Pokemon>();
-  const [specie, setSpecie] = useState<PokemonSpecie>();
-  const [evoChain, setEvoChain] = useState<EvoChain | null>();
+export default function PokemonPage({
+  pokemon,
+  specie,
+  evoChain,
+}: {
+  pokemon: Pokemon;
+  specie: PokemonSpecie;
+  evoChain: EvoChain | null;
+}) {
   const [isShiny, setIsShiny] = useState(false);
   const [isDefault, setIsDefault] = useState(true);
   const srcImg = `front${isShiny ? "_shiny" : ""}${
@@ -47,40 +50,6 @@ export default function PokemonPage() {
     rock: "from-rock to-ambar-500",
     flying: "from-flying to-indigo-500",
   };
-
-  useEffect(() => {
-    setEvoChain(null);
-    setIsDefault(true);
-    setIsShiny(false);
-    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, { cache: "force-cache" })
-      .then((res) => res.json())
-      .then(({ id, name, height, weight, sprites, types }) =>
-        setPokemon({
-          id,
-          name,
-          height,
-          weight,
-          sprites: sprites.other.home.front_default
-            ? sprites.other.home
-            : sprites.other["official-artwork"],
-          types,
-        })
-      );
-    fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
-      .then((res) => res.json())
-      .then(({ evolution_chain, flavor_text_entries }) =>
-        setSpecie({
-          evoChainUrl: evolution_chain?.url,
-          flavorText: flavor_text_entries[0]?.flavor_text,
-        })
-      );
-  }, [id]);
-
-  useEffect(() => {
-    fetch(specie?.evoChainUrl)
-      .then((res) => res.json())
-      .then((res) => setEvoChain(res.chain));
-  }, [specie]);
 
   return (
     <Layout
@@ -194,4 +163,37 @@ export default function PokemonPage() {
       </main>
     </Layout>
   );
+}
+
+export async function getServerSideProps(context: any) {
+  const { id } = context.params;
+  const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+    .then((res) => res.json())
+    .then(({ id, name, height, weight, sprites, types }) => ({
+      id,
+      name,
+      height,
+      weight,
+      sprites: sprites.other.home.front_default
+        ? sprites.other.home
+        : sprites.other["official-artwork"],
+      types,
+    }));
+  const specie: PokemonSpecie = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
+    .then((res) => res.json())
+    .then(({ evolution_chain, flavor_text_entries }) => ({
+      evoChainUrl: evolution_chain?.url,
+      flavorText: flavor_text_entries[0]?.flavor_text,
+    }));
+  const evoChain = await fetch(specie?.evoChainUrl)
+    .then((res) => res.json())
+    .then((res) => res.chain);
+
+  return {
+    props: {
+      pokemon,
+      specie,
+      evoChain,
+    },
+  };
 }
